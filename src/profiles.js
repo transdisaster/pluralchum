@@ -1,5 +1,4 @@
-const React = BdApi.React;
-
+import { React } from './common.js';
 import { sleep, isProxiedMessage } from './utility';
 
 export const ProfileStatus = {
@@ -26,23 +25,19 @@ async function httpGetAsync(url) {
 
 function pkDataToProfile(data) {
   let profile = {
-    name: data.member.name,
-    color: '#' + data.member.color,
-    tag: data.system.tag,
+    name: data.member.display_name || data.member.name,
+    color: '#' + (data.member.color || 'ffffff'),
+    tag: data.system.tag || '',
     id: data.member.id,
     system: data.system.id,
     status: ProfileStatus.Done,
-    system_color: '#' + data.system.color,
+    system_color: '#' + (data.system.color || 'ffffff'),
     sender: data.sender,
+    raw: data,
+    banner: data.member.banner,
+    pronouns: data.member.pronouns,
+    description: data.member.description,
   };
-
-  if (data.member.color === null) profile.color = '';
-
-  if (data.system.color === null) profile.system_color = '';
-
-  if (data.member.display_name) {
-    profile.name = data.member.display_name;
-  }
 
   return profile;
 }
@@ -132,3 +127,4 @@ export function hookupProfile(profileMap, author) {
 
   return [profile, setProfile];
 }
+
